@@ -32,7 +32,7 @@ const Home = () => {
   };
 
   const placeholder = `-> below are some example texts: 
-# successful, powerful, consistent, focussed.
+# success, power, consistent, focussed.
 # hardwork
 # confindence
 `;

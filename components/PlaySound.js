@@ -1,7 +1,6 @@
 import React from "react";
 import { RefreshCcw, StopCircle, Volume2 } from "react-feather";
 import dynamic from "next/dynamic";
-// import DEFAULT_MUSIC from "../assets/default.mp3";
 import AudioSpectrum from "react-audio-spectrum";
 
 export default function PlaySound({ playText }) {
@@ -9,8 +8,6 @@ export default function PlaySound({ playText }) {
   const synthRef = React.useRef(winObject);
   let audio;
   const audioSource = "default.mp3";
-  // const playAudio = new Audio("default.mp3");
-  // const playAudio =
   const [audioElem, setAudioElem] = React.useState();
 
   React.useEffect(() => {
