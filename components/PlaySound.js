@@ -111,7 +111,7 @@ export default function PlaySound({ playText }) {
           </select>
         </div>
         <div className="action_btns">
-          <button className="transparent_btn" onClick={choose}>
+          <button className="transparent_btn voice_play_btn" onClick={choose}>
             Play &nbsp;
             <Volume2 color="white" size={20} />
           </button>
