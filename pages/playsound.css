@@ -1,0 +1,32 @@
+.languages {
+  display: flex;
+}
+
+.transparent_btn {
+  background: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  outline: none;
+  padding: 5px 8px;
+  border: 1px solid white;
+  cursor: pointer;
+}
+
+.action_btns {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.play_configuration {
+  text-align: center;
+}
+
+.config_box > div {
+  display: inline-block;
+  width: 255px;
+  text-align: left;
+}

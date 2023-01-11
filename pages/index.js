@@ -42,7 +42,7 @@ const Home = () => {
       <div className="container">
         <div className="header">
           <div className="header-title">
-            <h1>Enter words to generate motivational text around it</h1>
+            <h1>Enter words to generate motivational text</h1>
           </div>
           <div className="header-subtitle">
             <h2>Power Up Your Motivation with AI-Powered Speech Generator!</h2>

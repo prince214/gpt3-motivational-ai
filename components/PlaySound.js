@@ -1,5 +1,5 @@
 import React from "react";
-import { StopCircle, Volume2 } from "react-feather";
+import { RefreshCcw, StopCircle, Volume2 } from "react-feather";
 import dynamic from "next/dynamic";
 // import DEFAULT_MUSIC from "../assets/default.mp3";
 import AudioSpectrum from "react-audio-spectrum";
@@ -24,7 +24,7 @@ export default function PlaySound({ playText }) {
   const [langAVoice, setLangAVoice] = React.useState(null);
   const [voicePitch, setVoicePitch] = React.useState(1);
   const [voiceSpeed, setVoiceSpeed] = React.useState(1);
-  const [backAudiVol, setBackAudioVol] = React.useState(0.1);
+  const [backAudiVol, setBackAudioVol] = React.useState(0.05);
 
   if (winObject) {
     audio = document.createElement("audio");
@@ -53,6 +53,13 @@ export default function PlaySound({ playText }) {
     utterThis.pitch = voicePitch;
     synthRef.current.speak(utterThis);
     setDefaultBackgroundMusic();
+
+    utterThis.addEventListener("end", (event) => {
+      console.log(
+        `Utterance has finished being spoken after ${event.elapsedTime} seconds.`
+      );
+      stopBackgroundMusic();
+    });
   };
 
   function selectAccent(e) {
@@ -67,10 +74,14 @@ export default function PlaySound({ playText }) {
   const resetVoiceConfig = () => {
     setVoicePitch(1);
     setVoiceSpeed(1);
+    synthRef.current.cancel();
+    stopBackgroundMusic();
+  };
+
+  const stopBackgroundMusic = () => {
     audio.pause();
     audio.currentTime = 0;
     audio.src = null;
-    synthRef.current.cancel();
   };
 
   function setDefaultBackgroundMusic() {
@@ -89,59 +100,75 @@ export default function PlaySound({ playText }) {
   return (
     <div style={{ width: "100%" }}>
       <h2 style={{ fontSize: "1rem", color: "white" }}>
-        Select accent <Volume2 color="white" onClick={choose} />
-        <StopCircle onClick={stopSpeechPlay} />
-        <div>
-          Pitch : {voicePitch}
-          <input
-            type="range"
-            min="-5"
-            step="0.1"
-            max="5"
-            onChange={(e) => setVoicePitch(e.target.value)}
-            value={voicePitch}
-          ></input>
+        <div className="languages">
+          <span>Select accent</span>&nbsp;&nbsp;&nbsp;
+          <select onChange={(e) => selectAccent(e)}>
+            {langAVoices.map((voice, index) => (
+              <option key={voice.name} value={index}>
+                {voice.name}
+              </option>
+            ))}
+          </select>
         </div>
-        <div>
-          Speed : {voiceSpeed}
-          <input
-            type="range"
-            min="-5"
-            step="0.1"
-            max="5"
-            onChange={(e) => setVoiceSpeed(e.target.value)}
-            value={voiceSpeed}
-          ></input>
+        <div className="action_btns">
+          <button className="transparent_btn" onClick={choose}>
+            Play &nbsp;
+            <Volume2 color="white" size={20} />
+          </button>
+
+          <button className="transparent_btn" onClick={stopSpeechPlay}>
+            Stop &nbsp;
+            <StopCircle size={20} />
+          </button>
+
+          <button className="transparent_btn" onClick={resetVoiceConfig}>
+            Reset voice &nbsp; <RefreshCcw size={18} />
+          </button>
         </div>
-        <div>
-          Background Music Volume : {backAudiVol}
-          <input
-            type="range"
-            min="0"
-            step="0.1"
-            max="1"
-            onChange={(e) => setBackAudioVol(e.target.value)}
-            value={backAudiVol}
-          ></input>
+
+        <div className="play_configuration">
+          <div className="config_box">
+            <div>Voice Pitch : {voicePitch}</div>
+            <input
+              type="range"
+              min="-5"
+              step="0.1"
+              max="5"
+              onChange={(e) => setVoicePitch(e.target.value)}
+              value={voicePitch}
+            ></input>
+          </div>
+
+          <div className="config_box">
+            <div>Voice Speed : {voiceSpeed}</div>
+            <input
+              type="range"
+              min="-5"
+              step="0.1"
+              max="5"
+              onChange={(e) => setVoiceSpeed(e.target.value)}
+              value={voiceSpeed}
+            ></input>
+          </div>
+          <div className="config_box">
+            <div>Background Music Volume : {backAudiVol}</div>
+            <input
+              type="range"
+              min="0"
+              step="0.05"
+              max="1"
+              onChange={(e) => setBackAudioVol(e.target.value)}
+              value={backAudiVol}
+            ></input>
+          </div>
         </div>
-        <button className="btn" onClick={resetVoiceConfig}>
-          <span>Reset voice</span>
-        </button>
-        <div>Music upload</div>
+
+        {/* <div>Music upload</div> */}
       </h2>
-      <div className="languages">
-        <select onChange={(e) => selectAccent(e)}>
-          {langAVoices.map((voice, index) => (
-            <option key={voice.name} value={index}>
-              {voice.name}
-            </option>
-          ))}
-        </select>
-      </div>
 
       {/* <audio id="audio-element" src={audioSource} autoPlay></audio> */}
 
-      <AudioSpectrum
+      {/* <AudioSpectrum
         id="audio-canvas"
         height={200}
         width={300}
@@ -156,7 +183,7 @@ export default function PlaySound({ playText }) {
           { stop: 1, color: "red" },
         ]}
         gap={4}
-      />
+      /> */}
     </div>
   );
 }
