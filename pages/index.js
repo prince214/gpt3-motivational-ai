@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import PlaySound from "../components/PlaySound";
 
 const Home = () => {
@@ -8,33 +12,37 @@ const Home = () => {
 
   const callGenerateEndpoint = async () => {
     setIsGenerating(true);
-
     console.log("Calling OpenAI...");
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userInput }),
-    });
-
-    const data = await response.json();
-    const { output } = data;
-    console.log("OpenAI replied...", output.text);
-
-    setApiOutput(`${output.text}`);
-    setIsGenerating(false);
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userInput }),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        const { output } = data;
+        setApiOutput(`${output.text}`);
+      } else {
+        throw "Error fetching data";
+      }
+    } catch (error) {
+      toast.error("Something went wrong! Please try again...");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const onUserChangedText = (event) => {
-    console.log(event.target.value);
     setUserInput(event.target.value);
   };
 
   const placeholder = `-> below are some example texts: 
-# success, power, consistent, focussed.
-# hardwork
-# confindence
+# success, power, consistent, focussed, hardwork, confindence
+# not being lazy and help others in need
+# get up and do some fucking work
 `;
 
   return (
@@ -42,7 +50,7 @@ const Home = () => {
       <div className="container">
         <div className="header">
           <div className="header-title">
-            <h1>Enter words to generate motivational text</h1>
+            <h1>Enter words or sentence to generate motivational text</h1>
           </div>
           <div className="header-subtitle">
             <h2>Power Up Your Motivation with AI-Powered Speech Generator!</h2>
@@ -104,6 +112,7 @@ const Home = () => {
           </div>
         </a>
       </div>
+      <ToastContainer />
     </div>
   );
 };

@@ -43,7 +43,6 @@ export default function PlaySound({ playText }) {
   }, [backAudiVol]);
 
   const choose = () => {
-    console.log(playText);
     const utterThis = new SpeechSynthesisUtterance(playText);
     utterThis.voice = langAVoice;
     utterThis.rate = voiceSpeed;
@@ -52,9 +51,6 @@ export default function PlaySound({ playText }) {
     setDefaultBackgroundMusic();
 
     utterThis.addEventListener("end", (event) => {
-      console.log(
-        `Utterance has finished being spoken after ${event.elapsedTime} seconds.`
-      );
       stopBackgroundMusic();
     });
   };
@@ -100,11 +96,15 @@ export default function PlaySound({ playText }) {
         <div className="languages">
           <span>Select accent</span>&nbsp;&nbsp;&nbsp;
           <select onChange={(e) => selectAccent(e)}>
-            {langAVoices.map((voice, index) => (
-              <option key={voice.name} value={index}>
-                {voice.name}
-              </option>
-            ))}
+            {langAVoices.length > 0 ? (
+              langAVoices.map((voice, index) => (
+                <option key={voice.name} value={index}>
+                  {voice.name}
+                </option>
+              ))
+            ) : (
+              <option>Default</option>
+            )}
           </select>
         </div>
         <div className="action_btns">

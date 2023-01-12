@@ -6,8 +6,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const basePromptPrefix = 
-`Write me a professional motivational speech in the style of GoalCast Youtube channel using the words below. Don't add any greetings at the beginning or ending. and also write in a way that all the words connects to each other in someway. Don't give any title.
+const basePromptPrefix = `Write me a professional motivational speech in the style of GoalCast Youtube channel using the words below. Don't add any greetings at the beginning or ending. and also write in a way that all the words connects to each other in someway. Don't give any title.
 Words:`;
 const basePromptSuffix = ` Dont add greetings at the begining.`;
 const generateAction = async (req, res) => {
@@ -19,7 +18,6 @@ const generateAction = async (req, res) => {
   });
 
   const basePromptOutput = baseCompletion.data.choices.pop();
-  console.log(basePromptOutput);
   res.status(200).json({ output: basePromptOutput });
 };
 
