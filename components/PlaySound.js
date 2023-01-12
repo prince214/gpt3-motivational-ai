@@ -23,6 +23,7 @@ export default function PlaySound({ playText }) {
   const [voiceSpeed, setVoiceSpeed] = React.useState(1);
   const [backAudiVol, setBackAudioVol] = React.useState(0.5);
   const [userUpload, setUserUpload] = React.useState(false);
+  const [isPlaying, setIsPlaying] = React.useState(false);
 
   if (winObject) {
     // audio = document.createElement("audio");
@@ -56,9 +57,10 @@ export default function PlaySound({ playText }) {
     utterThis.pitch = voicePitch;
     synthRef.current.speak(utterThis);
     setDefaultBackgroundMusic();
-
+    setIsPlaying(true);
     utterThis.addEventListener("end", (event) => {
       stopBackgroundMusic();
+      setIsPlaying(false);
     });
   };
 
@@ -104,7 +106,16 @@ export default function PlaySound({ playText }) {
     audioRef.current.setAttribute("src", URL.createObjectURL(files[0]));
     // audioRef.current.load();
     audioRef.current.pause();
+    synthRef.current.cancel();
   }
+
+  React.useEffect(() => {
+    const stopVoice = setTimeout(() => {
+      synthRef.current.cancel();
+    }, 2000);
+
+    return () => clearTimeout(stopVoice);
+  }, [voicePitch, voiceSpeed]);
 
   return (
     <div style={{ width: "100%" }}>
@@ -124,7 +135,12 @@ export default function PlaySound({ playText }) {
           </select>
         </div>
         <div className="action_btns">
-          <button className="transparent_btn voice_play_btn" onClick={choose}>
+          <button
+            className={`transparent_btn voice_play_btn ${
+              isPlaying && "isPlaying"
+            }`}
+            onClick={() => choose()}
+          >
             Play &nbsp;
             <Volume2 color="white" size={20} />
           </button>

@@ -54,6 +54,13 @@
   display: none;
 }
 
+.isPlaying {
+  background: #80808078;
+  opacity: 0.5;
+  cursor: none;
+  pointer-events: none;
+}
+
 @-webkit-keyframes gradientBG {
   0% {
     background-position: 0% 50%;
