@@ -46,6 +46,14 @@
   margin: 25px 0;
 }
 
+.d-block {
+  display: block;
+}
+
+.d-none {
+  display: none;
+}
+
 @-webkit-keyframes gradientBG {
   0% {
     background-position: 0% 50%;

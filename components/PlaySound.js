@@ -100,6 +100,7 @@ export default function PlaySound({ playText }) {
     const files = event.target.files;
     audioRef.current.setAttribute("src", URL.createObjectURL(files[0]));
     // audioRef.current.load();
+    audioRef.current.pause();
   }
 
   return (
@@ -172,13 +173,13 @@ export default function PlaySound({ playText }) {
           </div>
         </div>
 
-        <div className="music_upload_container">
-          {userUpload ? (
+        <div style={{ textAlign: "center" }} className="music_upload_container">
+          {/* {userUpload ? (
             <>
               <input type="file" onChange={loadBackGroundMusic} />
 
               <audio id="audio-element" ref={audioRef} controls>
-                <source src="" id="src" />
+                <source src={audioElem} id="src" />
               </audio>
             </>
           ) : (
@@ -188,7 +189,24 @@ export default function PlaySound({ playText }) {
             >
               Change Background music
             </button>
-          )}
+          )} */}
+
+          <div
+            className={`music_upload_container ${userUpload ? "" : "d-none"}`}
+          >
+            <input type="file" onChange={loadBackGroundMusic} />
+
+            <audio id="audio-element" ref={audioRef} controls>
+              <source src={audioElem} id="src" />
+            </audio>
+          </div>
+
+          <button
+            className={`transparent_btn ${!userUpload ? "d-block" : "d-none"}`}
+            onClick={() => setUserUpload(true)}
+          >
+            Change Background music
+          </button>
         </div>
       </h2>
 
