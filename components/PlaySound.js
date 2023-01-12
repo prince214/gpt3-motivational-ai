@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { RefreshCcw, StopCircle, Volume2 } from "react-feather";
 import dynamic from "next/dynamic";
 import AudioSpectrum from "react-audio-spectrum";
@@ -21,14 +21,16 @@ export default function PlaySound({ playText }) {
   const [langAVoice, setLangAVoice] = React.useState(null);
   const [voicePitch, setVoicePitch] = React.useState(1);
   const [voiceSpeed, setVoiceSpeed] = React.useState(1);
-  const [backAudiVol, setBackAudioVol] = React.useState(0.05);
+  const [backAudiVol, setBackAudioVol] = React.useState(0.5);
+  const [userUpload, setUserUpload] = React.useState(false);
 
   if (winObject) {
-    audio = document.createElement("audio");
-    audio.setAttribute("id", "audio-element");
-    audio.volume = backAudiVol;
+    // audio = document.createElement("audio");
+    // audio.setAttribute("id", "audio-element");
+    // audio.volume = backAudiVol;
   }
 
+  let audioRef = useRef();
   // audio.volume = backAudiVol;
 
   React.useEffect(() => {
@@ -39,8 +41,10 @@ export default function PlaySound({ playText }) {
   }, []);
 
   React.useEffect(() => {
-    audio.volume = backAudiVol;
-  }, [backAudiVol]);
+    if (audioRef.current) {
+      audioRef.current.volume = backAudiVol;
+    }
+  }, [backAudiVol, audioRef]);
 
   const choose = () => {
     const utterThis = new SpeechSynthesisUtterance(playText);
@@ -72,22 +76,30 @@ export default function PlaySound({ playText }) {
   };
 
   const stopBackgroundMusic = () => {
-    audio.pause();
-    audio.currentTime = 0;
-    audio.src = null;
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
+    // audioRef.current.src = null;
   };
 
   function setDefaultBackgroundMusic() {
-    audio.autoplay = true;
-    audio.load();
-    audio.addEventListener(
+    audioRef.current.autoplay = true;
+    audioRef.current.load();
+    audioRef.current.addEventListener(
       "load",
       function () {
-        audio.play();
+        audioRef.current.play();
       },
       true
     );
-    audio.src = audioSource;
+    if (!audioRef.current.src) {
+      audioRef.current.src = audioSource;
+    }
+  }
+
+  function loadBackGroundMusic(event) {
+    const files = event.target.files;
+    audioRef.current.setAttribute("src", URL.createObjectURL(files[0]));
+    // audioRef.current.load();
   }
 
   return (
@@ -152,7 +164,7 @@ export default function PlaySound({ playText }) {
             <input
               type="range"
               min="0"
-              step="0.05"
+              step="0.01"
               max="1"
               onChange={(e) => setBackAudioVol(e.target.value)}
               value={backAudiVol}
@@ -160,7 +172,24 @@ export default function PlaySound({ playText }) {
           </div>
         </div>
 
-        {/* <div>Music upload</div> */}
+        <div className="music_upload_container">
+          {userUpload ? (
+            <>
+              <input type="file" onChange={loadBackGroundMusic} />
+
+              <audio id="audio-element" ref={audioRef} controls>
+                <source src="" id="src" />
+              </audio>
+            </>
+          ) : (
+            <button
+              className="transparent_btn"
+              onClick={() => setUserUpload(true)}
+            >
+              Change Background music
+            </button>
+          )}
+        </div>
       </h2>
 
       {/* <audio id="audio-element" src={audioSource} autoPlay></audio> */}

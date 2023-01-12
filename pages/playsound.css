@@ -39,6 +39,13 @@
   animation: gradientBG 10s ease infinite;
 }
 
+.music_upload_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 25px 0;
+}
+
 @-webkit-keyframes gradientBG {
   0% {
     background-position: 0% 50%;
