@@ -38,6 +38,9 @@ export default function PlaySound({ playText }) {
       const voices = synthRef.current.getVoices();
       setLangAVoices(voices);
     }, 100);
+    return () => {
+      stopSpeechPlay();
+    };
   }, []);
 
   React.useEffect(() => {
@@ -194,7 +197,11 @@ export default function PlaySound({ playText }) {
           <div
             className={`music_upload_container ${userUpload ? "" : "d-none"}`}
           >
-            <input type="file" onChange={loadBackGroundMusic} />
+            <input
+              type="file"
+              accept="audio/mp3,audio/"
+              onChange={loadBackGroundMusic}
+            />
 
             <audio id="audio-element" ref={audioRef} controls>
               <source src={audioElem} id="src" />
